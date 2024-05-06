@@ -20,9 +20,24 @@ func SolicitarNumeroConta() int {
 	return numero
 }
 
+func (b *Banco) existeConta(numero int) bool {
+	for _, conta := range b.contas {
+		if conta.numero == numero {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (b *Banco) CriarConta(numero int) {
-	saldoInicial := 0.0
-	novaConta := Conta{numero: numero, saldo: saldoInicial}
-	b.contas = append(b.contas, novaConta)
-	fmt.Printf("Conta criada com sucesso: numero %d, saldo inicial %.2f\n", numero, saldoInicial)
+	if !b.existeConta(numero) {
+		saldoInicial := 0.0
+		novaConta := Conta{numero: numero, saldo: saldoInicial}
+		b.contas = append(b.contas, novaConta)
+		fmt.Printf("Conta criada com sucesso: número %d, saldo inicial %.2f\n", numero, saldoInicial)
+	} else {
+		fmt.Printf("Já existe conta para número %d. Tente outro numero.\n", numero)
+	}
+
 }
