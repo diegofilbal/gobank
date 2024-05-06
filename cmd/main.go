@@ -3,9 +3,14 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/diegofilbal/gobank/cmd/bank"
 )
 
 func main() {
+
+	banco := bank.Banco{}
+
 	for {
 		fmt.Println("Selecione uma opção:")
 		fmt.Println("1. Cadastrar Conta")
@@ -20,7 +25,8 @@ func main() {
 
 		switch opcao {
 		case 1:
-			fmt.Println("Cadastrar Conta")
+			numeroConta := bank.SolicitarNumeroConta()
+			banco.CriarConta(numeroConta)
 		case 2:
 			fmt.Println("Consultar Saldo")
 		case 3:
