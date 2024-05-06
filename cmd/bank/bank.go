@@ -22,9 +22,9 @@ func SolicitarNumeroConta() int {
 }
 
 func (b *Banco) buscaConta(numero int) *Conta {
-	for _, conta := range b.contas {
-		if conta.numero == numero {
-			return &conta
+	for i := range b.contas {
+		if b.contas[i].numero == numero {
+				return &b.contas[i]
 		}
 	}
 
