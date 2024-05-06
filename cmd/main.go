@@ -8,6 +8,9 @@ import (
 )
 
 func main() {
+
+	banco := bank.Banco{}
+
 	for {
 		fmt.Println("Selecione uma opção:")
 		fmt.Println("1. Cadastrar Conta")
@@ -22,7 +25,6 @@ func main() {
 
 		switch opcao {
 		case 1:
-			banco := bank.Banco{}
 			numeroConta := bank.SolicitarNumeroConta()
 			banco.CriarConta(numeroConta)
 		case 2:
