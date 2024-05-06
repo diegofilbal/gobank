@@ -36,7 +36,9 @@ func main() {
 			numeroConta := bank.SolicitarNumeroConta()
 			banco.ConsultarSaldo(numeroConta)
 		case 3:
-			fmt.Println("Realizar Crédito")
+			numeroConta := bank.SolicitarNumeroConta()
+			valor := bank.SolicitarValor()
+			banco.RealizarCredito(numeroConta, valor)
 		case 4:
 			fmt.Println("Realizar Débito")
 		case 5:
