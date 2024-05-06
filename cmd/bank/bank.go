@@ -56,3 +56,16 @@ func (b *Banco) CriarConta(numero int) {
 	}
 
 }
+
+func (b* Banco) ConsultarSaldo(numero int) {
+	if !numeroContaValido(numero) {
+		fmt.Println("Número de conta inválido. Certifique-se de que seja um número inteiro positivo.")
+		return
+	}
+	conta := b.buscaConta(numero)
+	if conta != nil {
+		fmt.Printf("Conta %d encontrada. Saldo: %.2f\n", numero, conta.saldo)
+	} else {
+		fmt.Printf("Conta %d não encontrada\n", numero)
+	}
+}
