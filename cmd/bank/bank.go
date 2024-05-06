@@ -16,7 +16,7 @@ type Banco struct {
 
 func SolicitarNumeroConta() int {
 	var numero int
-	fmt.Println("Digite o número da conta:")
+	fmt.Print("Digite o número da conta: ")
 	fmt.Scanln(&numero)
 	return numero
 }
