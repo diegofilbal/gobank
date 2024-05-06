@@ -21,14 +21,14 @@ func SolicitarNumeroConta() int {
 	return numero
 }
 
-func (b *Banco) existeConta(numero int) bool {
+func (b *Banco) buscaConta(numero int) *Conta {
 	for _, conta := range b.contas {
 		if conta.numero == numero {
-			return true
+			return &conta
 		}
 	}
 
-	return false
+	return nil
 }
 
 func numeroContaValido(numero int) bool {
@@ -45,7 +45,8 @@ func (b *Banco) CriarConta(numero int) {
 		fmt.Println("Número de conta inválido. Certifique-se de que seja um número inteiro positivo.")
 		return
 	}
-	if !b.existeConta(numero) {
+	conta := b.buscaConta(numero)
+	if conta == nil {
 		saldoInicial := 0.0
 		novaConta := Conta{numero: numero, saldo: saldoInicial}
 		b.contas = append(b.contas, novaConta)
