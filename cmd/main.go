@@ -12,6 +12,9 @@ func main() {
 	banco := bank.Banco{}
 
 	for {
+		fmt.Println("\n======================================")
+		fmt.Println("                GOBANK                ")
+		fmt.Println("======================================")
 		fmt.Println("Selecione uma opção:")
 		fmt.Println("1. Cadastrar Conta")
 		fmt.Println("2. Consultar Saldo")
@@ -19,6 +22,8 @@ func main() {
 		fmt.Println("4. Realizar Débito")
 		fmt.Println("5. Realizar Transferência")
 		fmt.Println("6. Sair")
+		fmt.Println("======================================")
+		fmt.Print("Digite uma opção: ")
 
 		var opcao int
 		fmt.Scanln(&opcao)
@@ -37,7 +42,7 @@ func main() {
 		case 5:
 			fmt.Println("Realizar Transferência")
 		case 6:
-			fmt.Println("Sair")
+			fmt.Println("Saindo da aplicação...")
 			os.Exit(0)
 		default:
 			fmt.Println("Opção inválida. Por favor, selecione novamente.")
