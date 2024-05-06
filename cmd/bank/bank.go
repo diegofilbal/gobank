@@ -2,6 +2,7 @@ package bank
 
 import (
 	"fmt"
+	"regexp"
 )
 
 type Conta struct {
@@ -30,7 +31,20 @@ func (b *Banco) existeConta(numero int) bool {
 	return false
 }
 
+func numeroContaValido(numero int) bool {
+	if numero <= 0 {
+		return false
+	}
+
+	match, _ := regexp.MatchString("^[0-9]+$", fmt.Sprint(numero))
+	return match
+}
+
 func (b *Banco) CriarConta(numero int) {
+	if !numeroContaValido(numero) {
+		fmt.Println("Número de conta inválido. Certifique-se de que seja um número inteiro positivo.")
+		return
+	}
 	if !b.existeConta(numero) {
 		saldoInicial := 0.0
 		novaConta := Conta{numero: numero, saldo: saldoInicial}
