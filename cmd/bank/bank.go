@@ -47,6 +47,15 @@ func numeroContaValido(numero int) bool {
 	return match
 }
 
+func valorValido(valor float64) bool {
+	if valor <= 0 {
+		return false
+	}
+
+	match, _ := regexp.MatchString("^[0-9]+(\\.[0-9]+)?$", fmt.Sprint(valor))
+	return match
+}
+
 func (b *Banco) CriarConta(numero int) {
 	if !numeroContaValido(numero) {
 		fmt.Println("Número de conta inválido. Certifique-se de que seja um número inteiro positivo.")
@@ -84,6 +93,10 @@ func (b *Banco) RealizarCredito(numero int, valor float64) {
 	}
 	conta := b.buscaConta(numero)
 	if conta != nil {
+		if !valorValido(valor) {
+			fmt.Println("Valor inválido. Certifique-se de que seja um número real positivo.")
+			return
+		}
 		conta.saldo += valor
 		fmt.Printf("Crédito de %.2f realizado com sucesso. Novo saldo: %.2f\n", valor, conta.saldo)
 	} else {
