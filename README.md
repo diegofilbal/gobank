@@ -6,7 +6,7 @@ Este é um sistema de gestão de contas bancárias desenvolvido em Go para a dis
 
 1. Clone este repositório.
 2. Certifique-se de ter o Go instalado em seu sistema (versão 1.21.1 recomendada).
-3. Navegue até a pasta `cmd` do projeto e execute os seguintes comandos:
+3. Navegue até a pasta `cmd` do projeto e execute a aplicação executando os seguintes comandos:
 
 ```sh
 $ cd gobank/cmd
