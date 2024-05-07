@@ -40,7 +40,9 @@ func main() {
 			valor := bank.SolicitarValor()
 			banco.RealizarCredito(numeroConta, valor)
 		case 4:
-			fmt.Println("Realizar Débito")
+			numeroConta := bank.SolicitarNumeroConta()
+			valor := bank.SolicitarValor()
+			banco.RealizarDebito(numeroConta, valor)
 		case 5:
 			fmt.Println("Realizar Transferência")
 		case 6:

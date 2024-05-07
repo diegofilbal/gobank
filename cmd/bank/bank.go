@@ -31,9 +31,9 @@ func SolicitarValor() float64 {
 func (b *Banco) buscaConta(numero int) *Conta {
 	for i := range b.contas {
 		if b.contas[i].numero == numero {
-				return &b.contas[i]
+			return &b.contas[i]
 		}
-}
+	}
 
 	return nil
 }
@@ -73,7 +73,7 @@ func (b *Banco) CriarConta(numero int) {
 
 }
 
-func (b* Banco) ConsultarSaldo(numero int) {
+func (b *Banco) ConsultarSaldo(numero int) {
 	if !numeroContaValido(numero) {
 		fmt.Println("Número de conta inválido. Certifique-se de que seja um número inteiro positivo.")
 		return
@@ -99,6 +99,24 @@ func (b *Banco) RealizarCredito(numero int, valor float64) {
 		}
 		conta.saldo += valor
 		fmt.Printf("Crédito de %.2f realizado com sucesso. Novo saldo: %.2f\n", valor, conta.saldo)
+	} else {
+		fmt.Printf("Conta %d não encontrada\n", numero)
+	}
+}
+
+func (b *Banco) RealizarDebito(numero int, valor float64) {
+	if !numeroContaValido(numero) {
+		fmt.Println("Número de conta inválido. Certifique-se de que seja um número inteiro positivo.")
+		return
+	}
+	conta := b.buscaConta(numero)
+	if conta != nil {
+		if !valorValido(valor) {
+			fmt.Println("Valor inválido. Certifique-se de que seja um número real positivo.")
+			return
+		}
+		conta.saldo -= valor
+		fmt.Printf("Débito de %.2f realizado com sucesso. Novo saldo: %.2f\n", valor, conta.saldo)
 	} else {
 		fmt.Printf("Conta %d não encontrada\n", numero)
 	}
