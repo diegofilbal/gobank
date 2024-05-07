@@ -44,7 +44,10 @@ func main() {
 			valor := bank.SolicitarValor()
 			banco.RealizarDebito(numeroConta, valor)
 		case 5:
-			fmt.Println("Realizar Transferência")
+			numeroContaOrigem := bank.SolicitarNumeroContaOrigem()
+			numeroContaDestino := bank.SolicitarNumeroContaDestino()
+			valor := bank.SolicitarValor()
+			banco.RealizarTransferencia(numeroContaOrigem, numeroContaDestino, valor)
 		case 6:
 			fmt.Println("Saindo da aplicação...")
 			os.Exit(0)

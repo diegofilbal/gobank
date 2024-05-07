@@ -21,6 +21,20 @@ func SolicitarNumeroConta() int {
 	return numero
 }
 
+func SolicitarNumeroContaOrigem() int {
+	var numero int
+	fmt.Print("Digite o número da conta de origem: ")
+	fmt.Scanln(&numero)
+	return numero
+}
+
+func SolicitarNumeroContaDestino() int {
+	var numero int
+	fmt.Print("Digite o número da conta de destino: ")
+	fmt.Scanln(&numero)
+	return numero
+}
+
 func SolicitarValor() float64 {
 	var valor float64
 	fmt.Print("Digite o valor: ")
@@ -120,4 +134,34 @@ func (b *Banco) RealizarDebito(numero int, valor float64) {
 	} else {
 		fmt.Printf("Conta %d não encontrada\n", numero)
 	}
+}
+
+func (b *Banco) RealizarTransferencia(numeroOrigem int, numeroDestino int, valor float64) {
+	if !numeroContaValido(numeroOrigem) || !numeroContaValido(numeroDestino) {
+		fmt.Println("Número de conta inválido. Certifique-se de que seja um número inteiro positivo.")
+		return
+	}
+	if numeroOrigem == numeroDestino {
+		fmt.Println("Conta de origem e destino não podem ser iguais.")
+		return
+	}
+	contaOrigem := b.buscaConta(numeroOrigem)
+	if contaOrigem == nil {
+		fmt.Printf("Conta %d não encontrada\n", numeroOrigem)
+		return
+	}
+	contaDestino := b.buscaConta(numeroDestino)
+	if contaDestino == nil {
+		fmt.Printf("Conta %d não encontrada\n", numeroDestino)
+		return
+	}
+	if !valorValido(valor) {
+		fmt.Println("Valor inválido. Certifique-se de que seja um número real positivo.")
+		return
+	}
+	contaOrigem.saldo -= valor
+	contaDestino.saldo += valor
+	fmt.Printf("Transferência de %.2f realizada com sucesso.\n", valor)
+	fmt.Printf("Novo saldo da conta %d: %.2f\n", numeroOrigem, contaOrigem.saldo)
+	fmt.Printf("Novo saldo da conta %d: %.2f\n", numeroDestino, contaDestino.saldo)
 }
