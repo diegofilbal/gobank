@@ -22,7 +22,8 @@ func main() {
 		fmt.Println("4. Realizar Crédito")
 		fmt.Println("5. Realizar Débito")
 		fmt.Println("6. Realizar Transferência")
-		fmt.Println("7. Sair")
+		fmt.Println("7. Render Juros")
+		fmt.Println("8. Sair")
 		fmt.Println("======================================")
 		fmt.Print("Digite uma opção: ")
 
@@ -53,6 +54,9 @@ func main() {
 			valor := bank.SolicitarValor()
 			banco.RealizarTransferencia(numeroContaOrigem, numeroContaDestino, valor)
 		case 7:
+			taxa := bank.SolicitarTaxa()
+			banco.RenderJuros(taxa)
+		case 8:
 			fmt.Println("Saindo da aplicação...")
 			os.Exit(0)
 		default:

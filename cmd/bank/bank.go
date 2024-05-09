@@ -36,6 +36,13 @@ func SolicitarNumeroContaDestino() int {
 	return numero
 }
 
+func SolicitarTaxa() float64 {
+	var numero float64
+	fmt.Print("Digite a taxa de juros (%) que deseja render nas contas cadastradas: ")
+	fmt.Scanln(&numero)
+	return numero
+}
+
 func SolicitarValor() float64 {
 	var valor float64
 	fmt.Print("Digite o valor: ")
@@ -195,4 +202,15 @@ func (b *Banco) RealizarTransferencia(numeroOrigem int, numeroDestino int, valor
 	} else {
 		fmt.Println("Saldo insuficiente na conta de origem para realizar a transferência.")
 	}
+}
+
+func (b *Banco) RenderJuros(taxaJuros float64) {
+	if len(b.contas) == 0 {
+		fmt.Println("Não há contas cadastradas")
+		return
+	}
+	for i := range b.contas {
+		b.contas[i].saldo *= (1 + taxaJuros/100)
+	}
+	fmt.Println("Juros aplicados em todas as contas com sucesso.")
 }
