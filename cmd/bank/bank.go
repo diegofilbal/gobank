@@ -70,6 +70,10 @@ func valorValido(valor float64) bool {
 	return match
 }
 
+func saldoSuficiente(conta Conta, valor float64) bool {
+	return valor <= conta.saldo
+}
+
 func (b *Banco) CriarConta(numero int) {
 	if !numeroContaValido(numero) {
 		fmt.Println("Número de conta inválido. Certifique-se de que seja um número inteiro positivo.")
@@ -129,8 +133,12 @@ func (b *Banco) RealizarDebito(numero int, valor float64) {
 			fmt.Println("Valor inválido. Certifique-se de que seja um número real positivo.")
 			return
 		}
-		conta.saldo -= valor
-		fmt.Printf("Débito de %.2f realizado com sucesso. Novo saldo: %.2f\n", valor, conta.saldo)
+		if saldoSuficiente(*conta, valor) {
+			conta.saldo -= valor
+			fmt.Printf("Débito de %.2f realizado com sucesso. Novo saldo: %.2f\n", valor, conta.saldo)
+		} else {
+			fmt.Println("Saldo insuficiente para realizar o débito.")
+		}
 	} else {
 		fmt.Printf("Conta %d não encontrada\n", numero)
 	}
@@ -159,9 +167,13 @@ func (b *Banco) RealizarTransferencia(numeroOrigem int, numeroDestino int, valor
 		fmt.Println("Valor inválido. Certifique-se de que seja um número real positivo.")
 		return
 	}
-	contaOrigem.saldo -= valor
-	contaDestino.saldo += valor
-	fmt.Printf("Transferência de %.2f realizada com sucesso.\n", valor)
-	fmt.Printf("Novo saldo da conta %d: %.2f\n", numeroOrigem, contaOrigem.saldo)
-	fmt.Printf("Novo saldo da conta %d: %.2f\n", numeroDestino, contaDestino.saldo)
+	if saldoSuficiente(*contaOrigem, valor) {
+		contaOrigem.saldo -= valor
+		contaDestino.saldo += valor
+		fmt.Printf("Transferência de %.2f realizada com sucesso.\n", valor)
+		fmt.Printf("Novo saldo da conta %d: %.2f\n", numeroOrigem, contaOrigem.saldo)
+		fmt.Printf("Novo saldo da conta %d: %.2f\n", numeroDestino, contaDestino.saldo)
+	} else {
+		fmt.Println("Saldo insuficiente na conta de origem para realizar a transferência.")
+	}
 }
