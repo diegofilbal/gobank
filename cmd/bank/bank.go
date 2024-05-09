@@ -90,7 +90,6 @@ func (b *Banco) CriarConta(numero int, tipoConta string) {
 			novaConta = Conta{numero: numero, saldo: saldoInicial}
 		}
 		b.contas = append(b.contas, novaConta)
-		fmt.Printf("Conta criada com sucesso: número %d, saldo inicial %.2f\n", numero, saldoInicial)
 		if tipoConta == "Bonus" {
 			fmt.Printf("Conta criada com sucesso: número %d, saldo inicial %.2f e e pontuação inicial: %d\n", numero, novaConta.saldo, novaConta.pontuacao)
 		} else {
