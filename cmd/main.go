@@ -16,8 +16,8 @@ func main() {
 		fmt.Println("                GOBANK                ")
 		fmt.Println("======================================")
 		fmt.Println("Selecione uma opção:")
-		fmt.Println("1. Cadastrar Conta")
-		fmt.Println("2. Cadastrar Conta Bonus")
+		fmt.Println("1. Cadastrar Conta Normal")
+		fmt.Println("2. Cadastrar Conta Bônus")
 		fmt.Println("3. Consultar Saldo")
 		fmt.Println("4. Realizar Crédito")
 		fmt.Println("5. Realizar Débito")
@@ -32,10 +32,10 @@ func main() {
 		switch opcao {
 		case 1:
 			numeroConta := bank.SolicitarNumeroConta()
-			banco.CriarConta(numeroConta, "")
+			banco.CriarConta(numeroConta, bank.CONTA_NORMAL)
 		case 2:
 			numeroConta := bank.SolicitarNumeroConta()
-			banco.CriarConta(numeroConta, "Bonus")
+			banco.CriarConta(numeroConta, bank.CONTA_BONUS)
 		case 3:
 			numeroConta := bank.SolicitarNumeroConta()
 			banco.ConsultarSaldo(numeroConta)
