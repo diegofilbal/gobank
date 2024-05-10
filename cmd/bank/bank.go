@@ -8,6 +8,7 @@ import (
 const (
 	CONTA_NORMAL   = "Normal"
 	CONTA_BONUS    = "Bônus"
+	CONTA_POUPANCA = "Poupança"
 )
 
 type Conta struct {
@@ -44,7 +45,7 @@ func SolicitarNumeroContaDestino() int {
 
 func SolicitarTaxa() float64 {
 	var numero float64
-	fmt.Print("Digite a taxa de juros (%) que deseja render nas contas cadastradas: ")
+	fmt.Print("Digite a taxa de juros (%) que deseja render nas contas poupança cadastradas: ")
 	fmt.Scanln(&numero)
 	return numero
 }
@@ -89,8 +90,7 @@ func saldoSuficiente(conta Conta, valor float64) bool {
 }
 
 func (c *Conta) imprime() {
-
-	fmt.Printf("\n--------------------------------------\n")
+	fmt.Println("\n--------------------------------------")
 	fmt.Println("            Dados da Conta            ")
 	fmt.Println("--------------------------------------")
 	fmt.Printf("Número: %d\n", c.numero)
@@ -217,13 +217,19 @@ func (b *Banco) RealizarTransferencia(numeroOrigem int, numeroDestino int, valor
 	}
 }
 
+func (c *Conta) renderJuros(taxaJuros float64) {
+	if c.tipo == CONTA_POUPANCA {
+		c.saldo *= (1 + taxaJuros/100)
+	}
+}
+
 func (b *Banco) RenderJuros(taxaJuros float64) {
 	if len(b.contas) == 0 {
-		fmt.Println("Não há contas cadastradas")
+		fmt.Println("Operação cancelada, o banco ainda não possui nenhuma conta cadastrada.")
 		return
 	}
 	for i := range b.contas {
-		b.contas[i].saldo *= (1 + taxaJuros/100)
+		b.contas[i].renderJuros(taxaJuros)
 	}
-	fmt.Println("Juros aplicados em todas as contas com sucesso.")
+	fmt.Println("Juros aplicados em todas as contas poupança cadastradas com sucesso.")
 }
