@@ -5,10 +5,16 @@ import (
 	"regexp"
 )
 
+const (
+	CONTA_NORMAL   = "Normal"
+	CONTA_BONUS    = "Bônus"
+)
+
 type Conta struct {
 	numero    int
 	saldo     float64
 	pontuacao int
+	tipo			string
 }
 
 type Banco struct {
@@ -82,26 +88,36 @@ func saldoSuficiente(conta Conta, valor float64) bool {
 	return valor <= conta.saldo
 }
 
+func (c *Conta) imprime() {
+
+	fmt.Printf("\n--------------------------------------\n")
+	fmt.Println("            Dados da Conta            ")
+	fmt.Println("--------------------------------------")
+	fmt.Printf("Número: %d\n", c.numero)
+	fmt.Printf("Tipo: %s\n", c.tipo)
+	fmt.Printf("Saldo: %.2f\n", c.saldo)
+	if c.tipo == CONTA_BONUS {
+		fmt.Printf("Pontuação: %d\n", c.pontuacao)
+	}
+}
+
 func (b *Banco) CriarConta(numero int, tipoConta string) {
 	if !numeroContaValido(numero) {
 		fmt.Println("Número de conta inválido. Certifique-se de que seja um número inteiro positivo.")
 		return
 	}
+
 	conta := b.buscaConta(numero)
 	if conta == nil {
 		saldoInicial := 0.0
-		var novaConta Conta
-		if tipoConta == "Bonus" {
-			novaConta = Conta{numero: numero, saldo: saldoInicial, pontuacao: 10}
-		} else {
-			novaConta = Conta{numero: numero, saldo: saldoInicial}
+		novaConta := Conta{numero: numero, saldo: saldoInicial, tipo: tipoConta}
+		if tipoConta == CONTA_BONUS {
+			novaConta.pontuacao = 10
 		}
+
 		b.contas = append(b.contas, novaConta)
-		if tipoConta == "Bonus" {
-			fmt.Printf("Conta criada com sucesso: número %d, saldo inicial %.2f e e pontuação inicial: %d\n", numero, novaConta.saldo, novaConta.pontuacao)
-		} else {
-			fmt.Printf("Conta criada com sucesso: número %d, saldo inicial %.2f\n", numero, novaConta.saldo)
-		}
+		fmt.Println("Conta criada com sucesso!")
+		novaConta.imprime()
 	} else {
 		fmt.Printf("Já existe conta para número %d. Tente outro número.\n", numero)
 	}
@@ -114,11 +130,8 @@ func (b *Banco) ConsultarSaldo(numero int) {
 	}
 	conta := b.buscaConta(numero)
 	if conta != nil {
-		if conta.pontuacao != 0 {
-			fmt.Printf("Conta %d encontrada. Saldo: %.2f e Pontuação: %d\n", numero, conta.saldo, conta.pontuacao)
-		} else {
-			fmt.Printf("Conta %d encontrada. Saldo: %.2f\n", numero, conta.saldo)
-		}
+		fmt.Println("Conta encontrada.")
+		conta.imprime()
 	} else {
 		fmt.Printf("Conta %d não encontrada\n", numero)
 	}
@@ -136,7 +149,7 @@ func (b *Banco) RealizarCredito(numero int, valor float64) {
 			return
 		}
 		conta.saldo += valor
-		if conta.pontuacao != 0 {
+		if conta.tipo == CONTA_BONUS {
 			conta.pontuacao += int(valor / 100)
 		}
 		fmt.Printf("Crédito de %.2f realizado com sucesso. Novo saldo: %.2f\n", valor, conta.saldo)
@@ -193,7 +206,7 @@ func (b *Banco) RealizarTransferencia(numeroOrigem int, numeroDestino int, valor
 	if saldoSuficiente(*contaOrigem, valor) {
 		contaOrigem.saldo -= valor
 		contaDestino.saldo += valor
-		if contaDestino.pontuacao != 0 {
+		if contaDestino.tipo == CONTA_BONUS {
 			contaDestino.pontuacao += int(valor / 200)
 		}
 		fmt.Printf("Transferência de %.2f realizada com sucesso.\n", valor)
