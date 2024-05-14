@@ -96,6 +96,16 @@ func saldoSuficiente(conta Conta, valor float64) bool {
 	return valor <= conta.saldo
 }
 
+func limiteSaldoNegativo(valor float64, saldo float64) bool {
+	limite := saldo - valor
+
+	if limite < -1000 {
+		return true
+	} else {
+		return false
+	}
+}
+
 func (c *Conta) imprime() {
 	fmt.Println("\n--------------------------------------")
 	fmt.Println("            Dados da Conta            ")
@@ -183,6 +193,10 @@ func (b *Banco) RealizarDebito(numero int, valor float64) {
 			fmt.Println("Valor inválido. Certifique-se de que seja um número real positivo.")
 			return
 		}
+		if (conta.tipo == CONTA_BONUS || conta.tipo == CONTA_NORMAL) && limiteSaldoNegativo(valor, conta.saldo) {
+			fmt.Println("Valor de limite negativo atingido para o tipo de conta!")
+			return
+		}
 		if saldoSuficiente(*conta, valor) {
 			conta.saldo -= valor
 			fmt.Printf("Débito de %.2f realizado com sucesso. Novo saldo: %.2f\n", valor, conta.saldo)
@@ -215,6 +229,10 @@ func (b *Banco) RealizarTransferencia(numeroOrigem int, numeroDestino int, valor
 	}
 	if !valorValido(valor) {
 		fmt.Println("Valor inválido. Certifique-se de que seja um número real positivo.")
+		return
+	}
+	if (contaOrigem.tipo == CONTA_BONUS || contaOrigem.tipo == CONTA_NORMAL) && limiteSaldoNegativo(valor, contaOrigem.saldo) {
+		fmt.Println("Valor de limite negativo atingido para o tipo de conta origem!")
 		return
 	}
 	if saldoSuficiente(*contaOrigem, valor) {
