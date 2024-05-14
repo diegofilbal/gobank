@@ -57,6 +57,13 @@ func SolicitarValor() float64 {
 	return valor
 }
 
+func solicitarSaldoInicial() float64 {
+	var valor float64
+	fmt.Print("Digite o saldo inicial: ")
+	fmt.Scanln(&valor)
+	return valor
+}
+
 func (b *Banco) buscaConta(numero int) *Conta {
 	for i := range b.contas {
 		if b.contas[i].numero == numero {
@@ -110,6 +117,13 @@ func (b *Banco) CriarConta(numero int, tipoConta string) {
 	conta := b.buscaConta(numero)
 	if conta == nil {
 		saldoInicial := 0.0
+		if tipoConta == CONTA_NORMAL {
+			saldoInicial = solicitarSaldoInicial()
+			if !valorValido(saldoInicial) {
+				fmt.Println("Valor inválido. Certifique-se de que seja um número real positivo.")
+				return
+			}
+		}
 		novaConta := Conta{numero: numero, saldo: saldoInicial, tipo: tipoConta}
 		if tipoConta == CONTA_BONUS {
 			novaConta.pontuacao = 10
