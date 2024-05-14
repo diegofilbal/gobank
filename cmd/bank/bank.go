@@ -96,6 +96,16 @@ func saldoSuficiente(conta Conta, valor float64) bool {
 	return valor <= conta.saldo
 }
 
+func limiteSaldoNegativo(valor float64, saldo float64) bool {
+	limite := saldo - valor
+
+	if limite < -1000 {
+		return true
+	} else {
+		return false
+	}
+}
+
 func (c *Conta) imprime() {
 	fmt.Println("\n--------------------------------------")
 	fmt.Println("            Dados da Conta            ")
@@ -183,11 +193,20 @@ func (b *Banco) RealizarDebito(numero int, valor float64) {
 			fmt.Println("Valor inválido. Certifique-se de que seja um número real positivo.")
 			return
 		}
-		if saldoSuficiente(*conta, valor) {
+		if conta.tipo == CONTA_BONUS || conta.tipo == CONTA_NORMAL {
+			if limiteSaldoNegativo(valor, conta.saldo) {
+				fmt.Println("Valor de limite negativo atingido para o tipo de conta origem!")
+				return
+			}
 			conta.saldo -= valor
 			fmt.Printf("Débito de %.2f realizado com sucesso. Novo saldo: %.2f\n", valor, conta.saldo)
 		} else {
-			fmt.Println("Saldo insuficiente para realizar o débito.")
+			if saldoSuficiente(*conta, valor) {
+				conta.saldo -= valor
+				fmt.Printf("Débito de %.2f realizado com sucesso. Novo saldo: %.2f\n", valor, conta.saldo)
+			} else {
+				fmt.Println("Saldo insuficiente para realizar o débito.")
+			}
 		}
 	} else {
 		fmt.Printf("Conta %d não encontrada\n", numero)
@@ -217,17 +236,29 @@ func (b *Banco) RealizarTransferencia(numeroOrigem int, numeroDestino int, valor
 		fmt.Println("Valor inválido. Certifique-se de que seja um número real positivo.")
 		return
 	}
-	if saldoSuficiente(*contaOrigem, valor) {
+	if contaOrigem.tipo == CONTA_BONUS || contaOrigem.tipo == CONTA_NORMAL {
+		if limiteSaldoNegativo(valor, contaOrigem.saldo) {
+			fmt.Println("Valor de limite negativo atingido para o tipo de conta origem!")
+			return
+		}
 		contaOrigem.saldo -= valor
 		contaDestino.saldo += valor
 		if contaDestino.tipo == CONTA_BONUS {
 			contaDestino.pontuacao += int(valor / 200)
 		}
-		fmt.Printf("Transferência de %.2f realizada com sucesso.\n", valor)
-		fmt.Printf("Novo saldo da conta %d: %.2f\n", numeroOrigem, contaOrigem.saldo)
-		fmt.Printf("Novo saldo da conta %d: %.2f\n", numeroDestino, contaDestino.saldo)
 	} else {
-		fmt.Println("Saldo insuficiente na conta de origem para realizar a transferência.")
+		if saldoSuficiente(*contaOrigem, valor) {
+			contaOrigem.saldo -= valor
+			contaDestino.saldo += valor
+			if contaDestino.tipo == CONTA_BONUS {
+				contaDestino.pontuacao += int(valor / 200)
+			}
+			fmt.Printf("Transferência de %.2f realizada com sucesso.\n", valor)
+			fmt.Printf("Novo saldo da conta %d: %.2f\n", numeroOrigem, contaOrigem.saldo)
+			fmt.Printf("Novo saldo da conta %d: %.2f\n", numeroDestino, contaDestino.saldo)
+		} else {
+			fmt.Println("Saldo insuficiente na conta de origem para realizar a transferência.")
+		}
 	}
 }
 
