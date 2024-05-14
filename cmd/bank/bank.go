@@ -127,7 +127,7 @@ func (b *Banco) CriarConta(numero int, tipoConta string) {
 	conta := b.buscaConta(numero)
 	if conta == nil {
 		saldoInicial := 0.0
-		if tipoConta == CONTA_POUPANCA {
+		if tipoConta == CONTA_POUPANCA || tipoConta == CONTA_NORMAL {
 			saldoInicial = solicitarSaldoInicial()
 			if !valorValido(saldoInicial) {
 				fmt.Println("Valor inválido. Certifique-se de que seja um número real positivo.")
