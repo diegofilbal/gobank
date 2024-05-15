@@ -84,7 +84,7 @@ func numeroContaValido(numero int) bool {
 }
 
 func valorValido(valor float64) bool {
-	if valor <= 0 {
+	if !(valor > 0) {
 		return false
 	}
 
