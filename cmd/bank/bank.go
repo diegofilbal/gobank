@@ -244,14 +244,14 @@ func (b *Banco) RealizarTransferencia(numeroOrigem int, numeroDestino int, valor
 		contaOrigem.saldo -= valor
 		contaDestino.saldo += valor
 		if contaDestino.tipo == CONTA_BONUS {
-			contaDestino.pontuacao += int(valor / 200)
+			contaDestino.pontuacao += int(valor / 150)
 		}
 	} else {
 		if saldoSuficiente(*contaOrigem, valor) {
 			contaOrigem.saldo -= valor
 			contaDestino.saldo += valor
 			if contaDestino.tipo == CONTA_BONUS {
-				contaDestino.pontuacao += int(valor / 200)
+				contaDestino.pontuacao += int(valor / 150)
 			}
 			fmt.Printf("Transferência de %.2f realizada com sucesso.\n", valor)
 			fmt.Printf("Novo saldo da conta %d: %.2f\n", numeroOrigem, contaOrigem.saldo)
