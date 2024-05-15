@@ -5,9 +5,17 @@ import (
 	"regexp"
 )
 
+const (
+	CONTA_NORMAL   = "Normal"
+	CONTA_BONUS    = "Bônus"
+	CONTA_POUPANCA = "Poupança"
+)
+
 type Conta struct {
-	numero int
-	saldo  float64
+	numero    int
+	saldo     float64
+	pontuacao int
+	tipo			string
 }
 
 type Banco struct {
@@ -31,6 +39,13 @@ func SolicitarNumeroContaOrigem() int {
 func SolicitarNumeroContaDestino() int {
 	var numero int
 	fmt.Print("Digite o número da conta de destino: ")
+	fmt.Scanln(&numero)
+	return numero
+}
+
+func SolicitarTaxa() float64 {
+	var numero float64
+	fmt.Print("Digite a taxa de juros (%) que deseja render nas contas poupança cadastradas: ")
 	fmt.Scanln(&numero)
 	return numero
 }
@@ -81,25 +96,45 @@ func saldoSuficiente(conta Conta, valor float64) bool {
 	return valor <= conta.saldo
 }
 
-func (b *Banco) CriarConta(numero int) {
+func (c *Conta) imprime() {
+	fmt.Println("\n--------------------------------------")
+	fmt.Println("            Dados da Conta            ")
+	fmt.Println("--------------------------------------")
+	fmt.Printf("Número: %d\n", c.numero)
+	fmt.Printf("Tipo: %s\n", c.tipo)
+	fmt.Printf("Saldo: %.2f\n", c.saldo)
+	if c.tipo == CONTA_BONUS {
+		fmt.Printf("Pontuação: %d\n", c.pontuacao)
+	}
+}
+
+func (b *Banco) CriarConta(numero int, tipoConta string) {
 	if !numeroContaValido(numero) {
 		fmt.Println("Número de conta inválido. Certifique-se de que seja um número inteiro positivo.")
 		return
 	}
+
 	conta := b.buscaConta(numero)
 	if conta == nil {
-		saldoInicial := solicitarSaldoInicial()
-		if !valorValido(saldoInicial) {
-			fmt.Println("Valor inválido. Certifique-se de que seja um número real positivo.")
-			return
+		saldoInicial := 0.0
+		if tipoConta == CONTA_NORMAL {
+			saldoInicial = solicitarSaldoInicial()
+			if !valorValido(saldoInicial) {
+				fmt.Println("Valor inválido. Certifique-se de que seja um número real positivo.")
+				return
+			}
 		}
-		novaConta := Conta{numero: numero, saldo: saldoInicial}
-		b.contas = append(b.contas, novaConta)
-		fmt.Printf("Conta criada com sucesso: número %d, saldo inicial %.2f\n", numero, saldoInicial)
-	} else {
-		fmt.Printf("Já existe conta para número %d. Tente outro numero.\n", numero)
-	}
+		novaConta := Conta{numero: numero, saldo: saldoInicial, tipo: tipoConta}
+		if tipoConta == CONTA_BONUS {
+			novaConta.pontuacao = 10
+		}
 
+		b.contas = append(b.contas, novaConta)
+		fmt.Println("Conta criada com sucesso!")
+		novaConta.imprime()
+	} else {
+		fmt.Printf("Já existe conta para número %d. Tente outro número.\n", numero)
+	}
 }
 
 func (b *Banco) ConsultarSaldo(numero int) {
@@ -109,7 +144,8 @@ func (b *Banco) ConsultarSaldo(numero int) {
 	}
 	conta := b.buscaConta(numero)
 	if conta != nil {
-		fmt.Printf("Conta %d encontrada. Saldo: %.2f\n", numero, conta.saldo)
+		fmt.Println("Conta encontrada.")
+		conta.imprime()
 	} else {
 		fmt.Printf("Conta %d não encontrada\n", numero)
 	}
@@ -127,6 +163,9 @@ func (b *Banco) RealizarCredito(numero int, valor float64) {
 			return
 		}
 		conta.saldo += valor
+		if conta.tipo == CONTA_BONUS {
+			conta.pontuacao += int(valor / 100)
+		}
 		fmt.Printf("Crédito de %.2f realizado com sucesso. Novo saldo: %.2f\n", valor, conta.saldo)
 	} else {
 		fmt.Printf("Conta %d não encontrada\n", numero)
@@ -181,10 +220,30 @@ func (b *Banco) RealizarTransferencia(numeroOrigem int, numeroDestino int, valor
 	if saldoSuficiente(*contaOrigem, valor) {
 		contaOrigem.saldo -= valor
 		contaDestino.saldo += valor
+		if contaDestino.tipo == CONTA_BONUS {
+			contaDestino.pontuacao += int(valor / 150)
+		}
 		fmt.Printf("Transferência de %.2f realizada com sucesso.\n", valor)
 		fmt.Printf("Novo saldo da conta %d: %.2f\n", numeroOrigem, contaOrigem.saldo)
 		fmt.Printf("Novo saldo da conta %d: %.2f\n", numeroDestino, contaDestino.saldo)
 	} else {
 		fmt.Println("Saldo insuficiente na conta de origem para realizar a transferência.")
 	}
+}
+
+func (c *Conta) renderJuros(taxaJuros float64) {
+	if c.tipo == CONTA_POUPANCA {
+		c.saldo *= (1 + taxaJuros/100)
+	}
+}
+
+func (b *Banco) RenderJuros(taxaJuros float64) {
+	if len(b.contas) == 0 {
+		fmt.Println("Operação cancelada, o banco ainda não possui nenhuma conta cadastrada.")
+		return
+	}
+	for i := range b.contas {
+		b.contas[i].renderJuros(taxaJuros)
+	}
+	fmt.Println("Juros aplicados em todas as contas poupança cadastradas com sucesso.")
 }
