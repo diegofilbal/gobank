@@ -106,7 +106,7 @@ func limiteSaldoNegativo(valor float64, saldo float64) bool {
 	}
 }
 
-func (c *Conta) imprime() {
+func (c *Conta) imprimeConta() {
 	fmt.Println("\n--------------------------------------")
 	fmt.Println("            Dados da Conta            ")
 	fmt.Println("--------------------------------------")
@@ -116,6 +116,12 @@ func (c *Conta) imprime() {
 	if c.tipo == CONTA_BONUS {
 		fmt.Printf("Pontuação: %d\n", c.pontuacao)
 	}
+}
+
+func (c *Conta) imprimeSaldo() {
+	fmt.Println("\n--------------------------------------")
+	fmt.Printf("Saldo da conta %d: %.2f\n", c.numero, c.saldo)
+	fmt.Println("--------------------------------------")
 }
 
 func (b *Banco) CriarConta(numero int, tipoConta string) {
@@ -141,9 +147,23 @@ func (b *Banco) CriarConta(numero int, tipoConta string) {
 
 		b.contas = append(b.contas, novaConta)
 		fmt.Println("Conta criada com sucesso!")
-		novaConta.imprime()
+		novaConta.imprimeConta()
 	} else {
 		fmt.Printf("Já existe conta para número %d. Tente outro número.\n", numero)
+	}
+}
+
+func (b *Banco) ConsultarConta(numero int) {
+	if !numeroContaValido(numero) {
+		fmt.Println("Número de conta inválido. Certifique-se de que seja um número inteiro positivo.")
+		return
+	}
+	conta := b.buscaConta(numero)
+	if conta != nil {
+		fmt.Println("Conta encontrada.")
+		conta.imprimeConta()
+	} else {
+		fmt.Printf("Conta %d não encontrada\n", numero)
 	}
 }
 
@@ -155,7 +175,7 @@ func (b *Banco) ConsultarSaldo(numero int) {
 	conta := b.buscaConta(numero)
 	if conta != nil {
 		fmt.Println("Conta encontrada.")
-		conta.imprime()
+		conta.imprimeSaldo()
 	} else {
 		fmt.Printf("Conta %d não encontrada\n", numero)
 	}
