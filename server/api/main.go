@@ -5,11 +5,18 @@ import (
 	"net/http"
 	"strconv"
 
+	utils "github.com/diegofilbal/gobank"
 	"github.com/diegofilbal/gobank/bank"
 	"github.com/gin-gonic/gin"
 )
 
 var banco = bank.Banco{}
+
+const (
+	CONTA_NORMAL   = "Normal"
+	CONTA_BONUS    = "Bonus"
+	CONTA_POUPANCA = "Poupança"
+)
 
 func main() {
 	r := gin.Default()
@@ -40,6 +47,26 @@ func cadastrarConta(ctx *gin.Context) {
 		return
 	}
 
+	if !utils.NumeroContaValido(req.Numero) {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Número da conta inválido"})
+		return
+	}
+
+	if req.Tipo == CONTA_NORMAL {
+		if !utils.ValorValido(req.Saldo) {
+			if !utils.NumeroContaValido(req.Numero) {
+				ctx.JSON(http.StatusBadRequest, gin.H{"error": "Saldo inicial da conta inválido"})
+				return
+			}
+		}
+	}
+
+	conta := banco.BuscaConta(req.Numero)
+	if conta != nil {
+		ctx.JSON(http.StatusConflict, gin.H{"error": "Conta já existente"})
+		return
+	}
+
 	banco.CriarConta(req.Numero, req.Tipo, req.Saldo)
 	ctx.JSON(http.StatusOK, gin.H{"message": "Conta criada com sucesso"})
 }
@@ -57,7 +84,16 @@ func consultarConta(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"saldo": conta.Saldo, "tipo": conta.Tipo, "pontuacao": conta.Pontuacao})
+	response := gin.H{
+		"saldo": conta.Saldo,
+		"tipo":  conta.Tipo,
+	}
+
+	if conta.Pontuacao != 0 {
+		response["pontuacao"] = conta.Pontuacao
+	}
+
+	ctx.JSON(http.StatusOK, response)
 }
 
 func consultarSaldo(ctx *gin.Context) {
@@ -92,6 +128,17 @@ func realizarCredito(ctx *gin.Context) {
 		return
 	}
 
+	conta := banco.ConsultarConta(numero)
+	if conta == nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Conta não encontrada"})
+		return
+	}
+
+	if !utils.ValorValido(req.Valor) {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Valor inválido"})
+		return
+	}
+
 	if err := banco.RealizarCredito(numero, req.Valor); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -116,6 +163,17 @@ func realizarDebito(ctx *gin.Context) {
 		return
 	}
 
+	conta := banco.ConsultarConta(numero)
+	if conta == nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Conta não encontrada"})
+		return
+	}
+
+	if !utils.ValorValido(req.Valor) {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Valor inválido"})
+		return
+	}
+
 	if err := banco.RealizarDebito(numero, req.Valor); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -133,6 +191,23 @@ func realizarTransferencia(ctx *gin.Context) {
 
 	if err := ctx.BindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Parâmetros inválidos"})
+		return
+	}
+
+	if !utils.ValorValido(req.Valor) {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Valor inválido"})
+		return
+	}
+
+	contaOrigem := banco.ConsultarConta(req.NumeroOrigem)
+	if contaOrigem == nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Conta origem não encontrada"})
+		return
+	}
+
+	contaDestino := banco.ConsultarConta(req.NumeroOrigem)
+	if contaDestino == nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Conta destino não encontrada"})
 		return
 	}
 
