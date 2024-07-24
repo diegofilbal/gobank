@@ -38,6 +38,14 @@ func saldoSuficiente(conta Conta, valor float64) bool {
 }
 
 func (b *Banco) CriarConta(numero int, tipoConta string, saldoInicial float64) error {
+	if !utils.NumeroContaValido(numero) {
+		return errors.New("Número de conta inválido")
+	}
+
+	conta := b.BuscaConta(numero)
+	if conta != nil {
+		return errors.New("Conta já existe")
+	}
 
 	novaConta := Conta{
 		Numero: numero,
@@ -72,9 +80,15 @@ func (b *Banco) ConsultarSaldo(numero int) *Conta {
 }
 
 func (b *Banco) RealizarCredito(numero int, valor float64) error {
+	if !utils.NumeroContaValido(numero) {
+		return errors.New("Número de conta inválido")
+	}
 	conta := b.BuscaConta(numero)
 	if conta == nil {
 		return errors.New("Conta não encontrada")
+	}
+	if !utils.ValorValido(valor) {
+		return errors.New("Valor inválido")
 	}
 
 	conta.Saldo += valor
@@ -86,11 +100,16 @@ func (b *Banco) RealizarCredito(numero int, valor float64) error {
 }
 
 func (b *Banco) RealizarDebito(numero int, valor float64) error {
+	if !utils.NumeroContaValido(numero) {
+		return errors.New("Número de conta inválido")
+	}
 	conta := b.BuscaConta(numero)
 	if conta == nil {
 		return errors.New("Conta não encontrada")
 	}
-
+	if !utils.ValorValido(valor) {
+		return errors.New("Valor inválido")
+	}
 	if !saldoSuficiente(*conta, valor) {
 		return errors.New("Saldo insuficiente")
 	}
@@ -100,6 +119,9 @@ func (b *Banco) RealizarDebito(numero int, valor float64) error {
 }
 
 func (b *Banco) RealizarTransferencia(numeroOrigem int, numeroDestino int, valor float64) error {
+	if !utils.NumeroContaValido(numeroOrigem) || !utils.NumeroContaValido(numeroDestino) {
+		return errors.New("Número de conta inválido")
+	}
 	if numeroOrigem == numeroDestino {
 		return errors.New("Conta de origem e destino não podem ser iguais")
 	}
@@ -110,6 +132,10 @@ func (b *Banco) RealizarTransferencia(numeroOrigem int, numeroDestino int, valor
 	contaDestino := b.BuscaConta(numeroDestino)
 	if contaDestino == nil {
 		return errors.New("Conta de destino não encontrada")
+	}
+
+	if !utils.ValorValido(valor) {
+		return errors.New("Valor inválido")
 	}
 
 	if !saldoSuficiente(*contaOrigem, valor) {
