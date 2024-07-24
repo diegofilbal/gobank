@@ -94,6 +94,8 @@ const Grid = () => {
     const [valorCredito, setValorCredito] = useState(Number) ;
     const [valorDebito, setValorDebito] = useState(Number) ;
     
+    const [taxaRendimento, setTaxaRendimento] = useState(Number) ;
+    
     const [numContaCredito, setNumContaCredito] = useState(Number) ;
     const [numContaDebito, setNumContaDebito] = useState(Number) ;
     const [valorTransferencia, setValorTransferencia] = useState(Number) ;
@@ -107,9 +109,24 @@ const Grid = () => {
   const getConta = async(e:React.FormEvent<HTMLFormElement>) =>{
     e.preventDefault();     
     try{
-      const res = await axios.get(`http://localhost:8001/banco/conta/${contaNum}`);
-      toast.success(res.data.message);
-      setConta(res.data);
+       await axios.get(`http://localhost:8001/banco/conta/${contaNum}`)
+      .then((response)=>{setConta(response.data); toast.success("conta Encontrada!")})
+      .catch((error)=>{
+          if (!(!error.response)) {
+              // A requisição foi feita e o servidor respondeu com um código de status
+              // que sai do alcance de 2xx
+              toast.error(error.response.status + " " + error.response.data.error);
+            } else if (error.request) {
+              // A requisição foi feita mas nenhuma resposta foi recebida
+              // `error.request` é uma instância do XMLHttpRequest no navegador e uma instância de
+              // http.ClientRequest no node.js
+              toast.error(error.request);
+            } else {
+              // Alguma coisa acontenceu ao configurar a requisição que acionou este erro.
+              toast.error('Error', error.message);
+            }
+            toast.error(error.config);
+      });
     }catch( error : any){
       toast.error( error);
     }
@@ -120,8 +137,24 @@ const Grid = () => {
     try{
       const res = await axios.put(`http://localhost:8001/banco/conta/${contaNum}/credito`,{
         "valor": valorCredito,
+      })
+      .then((response)=>{ toast.success(response.data.message)})
+      .catch((error)=>{
+          if (!(!error.response)) {
+              // A requisição foi feita e o servidor respondeu com um código de status
+              // que sai do alcance de 2xx
+              toast.error(error.response.status + " " + error.response.data.error);
+            } else if (error.request) {
+              // A requisição foi feita mas nenhuma resposta foi recebida
+              // `error.request` é uma instância do XMLHttpRequest no navegador e uma instância de
+              // http.ClientRequest no node.js
+              toast.error(error.request);
+            } else {
+              // Alguma coisa acontenceu ao configurar a requisição que acionou este erro.
+              toast.error('Error', error.message);
+            }
+            toast.error(error.config);
       });
-      toast.success(res.data.message);
     }catch( error : any){
       toast.error( error);
     }
@@ -132,8 +165,24 @@ const Grid = () => {
     try{
       const res = await axios.put(`http://localhost:8001/banco/conta/${contaNum}/debito`,{
         "valor": valorDebito,
+      })
+      .then((response)=>{toast.success(response.data.message)})
+      .catch((error)=>{
+          if (!(!error.response)) {
+              // A requisição foi feita e o servidor respondeu com um código de status
+              // que sai do alcance de 2xx
+              toast.error(error.response.status + " " + error.response.data.error);
+            } else if (error.request) {
+              // A requisição foi feita mas nenhuma resposta foi recebida
+              // `error.request` é uma instância do XMLHttpRequest no navegador e uma instância de
+              // http.ClientRequest no node.js
+              toast.error(error.request);
+            } else {
+              // Alguma coisa acontenceu ao configurar a requisição que acionou este erro.
+              toast.error('Error', error.message);
+            }
+            toast.error(error.config);
       });
-      toast.success(res.data.message);
     }catch( error : any){
       toast.error( error);
     }
@@ -146,9 +195,50 @@ const Grid = () => {
         "from": numContaDebito,
         "to": numContaCredito,
         "amount": valorTransferencia
+      })
+      .then((response)=>{toast.success(response.data.message)})
+      .catch((error)=>{
+          if (!(!error.response)) {
+              // A requisição foi feita e o servidor respondeu com um código de status
+              // que sai do alcance de 2xx
+              toast.error(error.response.status + " " + error.response.data.error);
+            } else if (error.request) {
+              // A requisição foi feita mas nenhuma resposta foi recebida
+              // `error.request` é uma instância do XMLHttpRequest no navegador e uma instância de
+              // http.ClientRequest no node.js
+              toast.error(error.request);
+            } else {
+              // Alguma coisa acontenceu ao configurar a requisição que acionou este erro.
+              toast.error('Error', error.message);
+            }
+            toast.error(error.config);
       });
-      console.log(res);
-      toast.success(res.data.message);
+    }catch( error : any){
+      toast.error( error);
+    }
+  }
+
+  const postRender = async(e:React.FormEvent<HTMLFormElement>) =>{
+    e.preventDefault();     
+    try{
+      const res = await axios.put(`http://localhost:8001/banco/conta/rendimento`,{"taxa": taxaRendimento})
+      .then((response)=>{toast.success(response.data.message)})
+      .catch((error)=>{
+          if (!(!error.response)) {
+              // A requisição foi feita e o servidor respondeu com um código de status
+              // que sai do alcance de 2xx
+              toast.error(error.response.status + " " + error.response.data.error);
+            } else if (error.request) {
+              // A requisição foi feita mas nenhuma resposta foi recebida
+              // `error.request` é uma instância do XMLHttpRequest no navegador e uma instância de
+              // http.ClientRequest no node.js
+              toast.error(error.request);
+            } else {
+              // Alguma coisa acontenceu ao configurar a requisição que acionou este erro.
+              toast.error('Error', error.message);
+            }
+            toast.error(error.config);
+      });
     }catch( error : any){
       toast.error( error);
     }
@@ -221,6 +311,14 @@ const Grid = () => {
             
             </InputArea>
             <Button type="submit"> Transferir</Button>
+        </FormContainer>
+        <h2>Render</h2>
+        <FormContainer onSubmit={postRender}>
+            <InputArea>
+                <Label>Taxa</Label>
+                <Input name="numero" type= "number" onChange={(e)=>setTaxaRendimento(parseInt(e.target.value))}></Input>
+            </InputArea>
+            <Button type="submit"> Render</Button>
         </FormContainer>
         </>
     );

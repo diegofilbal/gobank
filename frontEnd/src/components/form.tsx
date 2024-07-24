@@ -47,13 +47,28 @@ const Form = () => {
     
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault(); 
-        await axios.post("http://localhost:8001/banco/conta",{
+        const rs = await axios.post("http://localhost:8001/banco/conta",{
             "numero" : numero, 
             "tipo" : tipo,
             "saldoInicial" : saldo
         })
-        .then(()=>{ toast.success("Reserva feita com sucesso")})
-        .catch(({data})=>toast.error(data));
+        .then((response)=>{console.log(response); toast.success(response.data.message)})
+        .catch((error)=>{
+            if (!(!error.response)) {
+                // A requisição foi feita e o servidor respondeu com um código de status
+                // que sai do alcance de 2xx
+                toast.error(error.response.status + " " + error.response.data.error);
+              } else if (error.request) {
+                // A requisição foi feita mas nenhuma resposta foi recebida
+                // `error.request` é uma instância do XMLHttpRequest no navegador e uma instância de
+                // http.ClientRequest no node.js
+                toast.error(error.request);
+              } else {
+                // Alguma coisa acontenceu ao configurar a requisição que acionou este erro.
+                toast.error('Error', error.message);
+              }
+              toast.error(error.config);
+        });
         
     };
 
