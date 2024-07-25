@@ -21,7 +21,7 @@ const (
 func main() {
 	r := gin.Default()
 
-	r.POST("banco/conta", cadastrarConta))
+	r.POST("banco/conta", cadastrarConta)
 	r.GET("banco/conta/:numero", consultarConta)
 	r.GET("banco/conta/:numero/saldo", consultarSaldo)
 	r.PUT("banco/conta/:numero/credito", realizarCredito)
