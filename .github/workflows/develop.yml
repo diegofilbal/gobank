@@ -29,11 +29,11 @@ jobs:
         working-directory: ./server
 
       - name: Build
-        run: go build -o build api/main.go
+        run: make build
         working-directory: ./server
 
       - name: Test
-        run: go test -v ./...
+        run: make test
         working-directory: ./server
 
       - name: Tag creation
