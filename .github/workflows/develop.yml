@@ -38,6 +38,6 @@ jobs:
 
       - name: Tag creation
         run: |
-          TAG="build-$(date +'%m%d%Y%H%M%S')"
+          TAG="build-$(date +'%d-%m-%Y_%H-%M-%S')"
           git tag $TAG
           git push origin $TAG
