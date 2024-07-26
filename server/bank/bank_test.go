@@ -304,7 +304,7 @@ func TestRealizarTransferencia(t *testing.T) {
 
 func TestRenderJuros(t *testing.T) {
 	b := Banco{}
-	err: := b.CriarConta(1, CONTA_POUPANCA, 0.0)
+	err := b.CriarConta(1, CONTA_POUPANCA, 0.0)
 	if err != nil {
 		fmt.Println("Erro: ", err)
 	}
