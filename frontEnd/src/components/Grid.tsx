@@ -83,6 +83,7 @@ const Input = styled.input`
 const Label = styled.label``;
 
 type ContaType ={
+    conta: Number;
     pontuacao: Number;
     saldo: Number;
     tipo: String;
@@ -100,17 +101,51 @@ const Grid = () => {
     const [numContaDebito, setNumContaDebito] = useState(Number) ;
     const [valorTransferencia, setValorTransferencia] = useState(Number) ;
     const [conta, setConta] = useState<ContaType>({
+        conta: 0,
         pontuacao: 0,
         saldo: 0,
-        tipo: "Normal"
+        tipo: "inicio"
 
     });
+    const [saldoConta, setSaldoConta] = useState<ContaType>({
+      conta: 0,
+      pontuacao: 0,
+      saldo: 0,
+      tipo: "inicio"
+
+  }) ;
   
   const getConta = async(e:React.FormEvent<HTMLFormElement>) =>{
     e.preventDefault();     
     try{
        await axios.get(`http://localhost:8001/banco/conta/${contaNum}`)
-      .then((response)=>{setConta(response.data); toast.success("conta Encontrada!")})
+      .then((response)=>{console.log(response);setConta(response.data); toast.success("conta Encontrada!")})
+      .catch((error)=>{
+          if (!(!error.response)) {
+              // A requisição foi feita e o servidor respondeu com um código de status
+              // que sai do alcance de 2xx
+              toast.error(error.response.status + " " + error.response.data.error);
+            } else if (error.request) {
+              // A requisição foi feita mas nenhuma resposta foi recebida
+              // `error.request` é uma instância do XMLHttpRequest no navegador e uma instância de
+              // http.ClientRequest no node.js
+              toast.error(error.request);
+            } else {
+              // Alguma coisa acontenceu ao configurar a requisição que acionou este erro.
+              toast.error('Error', error.message);
+            }
+            toast.error(error.config);
+      });
+    }catch( error : any){
+      toast.error( error);
+    }
+  }
+
+  const getSaldo = async(e:React.FormEvent<HTMLFormElement>) =>{
+    e.preventDefault();     
+    try{
+       await axios.get(`http://localhost:8001/banco/conta/${contaNum}/saldo`)
+      .then((response)=>{setSaldoConta(response.data); toast.success("conta Encontrada!")})
       .catch((error)=>{
           if (!(!error.response)) {
               // A requisição foi feita e o servidor respondeu com um código de status
@@ -246,6 +281,7 @@ const Grid = () => {
 
     return (
         <>
+        <h2>Buscar conta:</h2>
         <FormContainer onSubmit={getConta}>
             <InputArea>
                 <Label>Numero da conta</Label>
@@ -253,6 +289,7 @@ const Grid = () => {
             </InputArea>
             <Button type="submit">pesquisar</Button>
         </FormContainer>
+        <h2>Conta encontrada:</h2>
         <Table>
             <Thead>
                 <Tr>
@@ -261,10 +298,31 @@ const Grid = () => {
                     <Th>Tipo</Th>
                 </Tr>
                     <Tr>
-                        <Td>{!conta ? "" : "" + conta.pontuacao + ""}</Td>
-                        <Td>{!conta ? "" : "" + conta.saldo + ""}</Td>
-                        <Td>{!conta ? "" : conta.tipo}</Td>
+                        <Td>{conta.tipo=="inicio" ? "" : "" + (!conta.pontuacao ? "Não se aplica" : conta.pontuacao) + ""}</Td>
+                        <Td>{conta.tipo=="inicio" ? "" : "" + conta.saldo + ""}</Td>
+                        <Td>{conta.tipo=="inicio" ? "" : conta.tipo}</Td>
                     </Tr>
+            </Thead>
+        </Table>
+        <h2>Consultar saldo:</h2>
+        <FormContainer onSubmit={getSaldo}>
+            <InputArea>
+                <Label>Numero da conta</Label>
+                <Input name="numero" type= "number" onChange={(e)=>setContaNum(parseInt(e.target.value))}></Input>
+            </InputArea>
+            <Button type="submit">pesquisar</Button>
+        </FormContainer>
+        <h2>Conta encontrada:</h2>
+        <Table>
+            <Thead>
+                <Tr>
+                  <Th>Numero</Th>
+                  <Th>Saldo</Th>
+                </Tr>
+                <Tr>
+                  <Td>{saldoConta.tipo=="inicio" ? "" : "" + saldoConta.conta + ""}</Td>
+                  <Td>{saldoConta.tipo=="inicio" ? "" : "" + saldoConta.saldo + ""}</Td>
+                </Tr>
             </Thead>
         </Table>
         <h2>Fazer Credito</h2>
@@ -298,12 +356,12 @@ const Grid = () => {
         <h2>Transferência</h2>
         <FormContainer onSubmit={postTransferencia}>
             <InputArea>
-                <Label>Numero da conta de Credito</Label>
-                <Input name="numero" type= "number" onChange={(e)=>setNumContaCredito(parseInt(e.target.value))}></Input>
+                <Label>Numero da conta de origem</Label>
+                <Input name="numero" type= "number" onChange={(e)=>setNumContaDebito(parseInt(e.target.value))}></Input>
             </InputArea>
             <InputArea>
-                <Label>Numero da conta de Debito</Label>
-                <Input name="numero" type= "number" onChange={(e)=>setNumContaDebito(parseInt(e.target.value))}></Input>
+                <Label>Numero da conta de destino</Label>
+                <Input name="numero" type= "number" onChange={(e)=>setNumContaCredito(parseInt(e.target.value))}></Input>
             </InputArea>
             <InputArea>
                 <Label>Valor</Label>

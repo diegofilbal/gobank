@@ -73,7 +73,10 @@ const Form = () => {
     };
 
     return (
+        <>
+        <h2>Criação de conta nova</h2>
         <FormContainer onSubmit={handleSubmit}>
+            <>
             <InputArea>
                 <Label>Numero da conta</Label>
                 <Input name="qtd" type= "number" onChange={(e)=>setNumero(parseInt(e.target.value))}></Input>
@@ -84,18 +87,22 @@ const Form = () => {
                 </InputArea>
             <InputArea>
                 <Label>Bônus</Label>
-                <Input name="tipo" type="radio" onChange={(e)=>setTipo("Bônus")}></Input>
+                <Input name="tipo" type="radio" onChange={(e)=>setTipo("Bonus")}></Input>
                 </InputArea>
             <InputArea>
                 <Label>Poupanca</Label>
                 <Input name="tipo" type="radio" onChange={(e)=>setTipo("Poupança")}></Input>
             </InputArea>
+            {tipo=="Normal" ? (
             <InputArea>
                 <Label>Saldo Inicial</Label>
                 <Input name="saldo" type= "number" onChange={(e)=>setSaldo(parseInt(e.target.value))}></Input>
             </InputArea>
+            ) : ("")}
             <Button type="submit">Enviar</Button>
+            </>
         </FormContainer>
+        </>
     );
 };
 
