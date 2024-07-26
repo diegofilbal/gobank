@@ -55,8 +55,8 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./path/to/Dockerfile
-          push: false
+          file: ./server/Dockerfile
+          push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/gobank:v1.0.0
 
       - name: Log in to Docker Hub
