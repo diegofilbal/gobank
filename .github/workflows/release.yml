@@ -46,5 +46,5 @@ jobs:
       - name: Upload release assets
         uses: actions/upload-artifact@v3
         with:
-          name: $(echo $GITHUB_REF | awk -F'/' '{print $3}').zip
+          name: ${{ github.ref_name }}.zip
           path: ./server/gobank-dev.zip
