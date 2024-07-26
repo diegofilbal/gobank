@@ -1,6 +1,7 @@
 package bank
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -67,11 +68,11 @@ func TestConsultarConta(t *testing.T) {
 	if err != nil {
 		fmt.Println("Erro: ", err)
 	}
-	err := b.CriarConta(2, CONTA_BONUS, 50.0)
+	err = b.CriarConta(2, CONTA_BONUS, 50.0)
 	if err != nil {
 		fmt.Println("Erro: ", err)
 	}
-	err := b.CriarConta(3, CONTA_POUPANCA, 200.0)
+	err = b.CriarConta(3, CONTA_POUPANCA, 200.0)
 	if err != nil {
 		fmt.Println("Erro: ", err)
 	}
@@ -308,15 +309,15 @@ func TestRenderJuros(t *testing.T) {
 	if err != nil {
 		fmt.Println("Erro: ", err)
 	}
-	err := b.RealizarCredito(1, 1000.0)
+	err = b.RealizarCredito(1, 1000.0)
 	if err != nil {
 		fmt.Println("Erro: ", err)
 	}
-	err := b.CriarConta(2, CONTA_POUPANCA, 2000.0)
+	err = b.CriarConta(2, CONTA_POUPANCA, 2000.0)
 	if err != nil {
 		fmt.Println("Erro: ", err)
 	}
-	err := b.RealizarCredito(2, 2000.0)
+	err = b.RealizarCredito(2, 2000.0)
 	if err != nil {
 		fmt.Println("Erro: ", err)
 	}
