@@ -26,7 +26,7 @@ func ValorValido(valor float64) bool {
 func LimiteSaldoNegativo(valor float64, saldo float64) bool {
 	limite := saldo - valor
 
-	if limite < -1000 {
+	if limite < -2000 {
 		return true
 	} else {
 		return false
