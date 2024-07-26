@@ -1,4 +1,4 @@
-name: Release Production
+name: Main CI
 
 on:
   pull_request_target:
@@ -8,8 +8,7 @@ on:
       - main
 
 jobs:
-
-  main-pipeline:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,10 +19,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21.1'
-
-      - name: Install golangci-lint
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.52.2
 
       - name: Resolve dependencies
         run: make dependencies
@@ -53,9 +48,15 @@ jobs:
 
       - name: Create new rel tag
         run: |
-          NEW_TAG="rel-${LATEST_RC_TAG#rc-}"
-          git tag $NEW_TAG
-          git push origin $NEW_TAG
+          if [ -n "${LATEST_RC_TAG}" ]; then
+            BASE_TAG="${LATEST_RC_TAG#rc-}"
+            NEW_TAG="rel-${BASE_TAG}"
+            git tag $NEW_TAG
+            git push origin $NEW_TAG
+          else
+            echo "No rc tag found, skipping tag creation."
+            exit 1
+          fi
         env:
           LATEST_RC_TAG: ${{ env.LATEST_RC_TAG }}
 
@@ -63,11 +64,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.NEW_TAG }}.zip
-          path: ./server/gobank.zip
+          path: ./server/gobank-dev.zip
 
       - name: Build Docker image
         run: |
-          docker build -t $DOCKER_USERNAME/gobank:${{ env.NEW_TAG }} .
+          docker build -t $DOCKER_USERNAME/gobank-dev:${{ env.NEW_TAG }} .
         working-directory: ./server
 
       - name: Log in to Docker Hub
@@ -78,4 +79,4 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push $DOCKER_USERNAME/gobank:${{ env.NEW_TAG }}
+          docker push $DOCKER_USERNAME/gobank-dev:${{ env.NEW_TAG }}
