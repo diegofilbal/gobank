@@ -9,7 +9,7 @@ COPY . .
 
 RUN tree
 
-RUN go mod tidy
+RUN cd server && go mod tidy
 
 RUN go build -o main ./api/main.go
 
