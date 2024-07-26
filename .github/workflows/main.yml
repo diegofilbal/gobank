@@ -51,10 +51,12 @@ jobs:
           name: latest.zip
           path: ./server/gobank.zip
 
-      - name: Build Docker image
-        run: |
-          docker build -t $DOCKER_USERNAME/gobank:latest .
-        working-directory: ./server
+      - name: build the docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: false
+          tags: ${{ secrets.DOCKER_USERNAME }}/gobank:v1.0.0
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3.3.0
@@ -64,4 +66,4 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push $DOCKER_USERNAME/gobank:latest
+          docker push $DOCKER_USERNAME/gobank:v1.0.0
