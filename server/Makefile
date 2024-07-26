@@ -1,6 +1,6 @@
 .PHONY: default run build test lint clean
 
-APP_NAME=gobank-dev
+APP_NAME=gobank
 
 default: run
 
