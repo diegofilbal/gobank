@@ -7,6 +7,7 @@ import (
 
 	utils "github.com/diegofilbal/gobank"
 	"github.com/diegofilbal/gobank/bank"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,6 +21,15 @@ const (
 
 func main() {
 	r := gin.Default()
+
+	// Configura CORS
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"}, // Ajuste conforme necessário
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
 
 	r.POST("banco/conta", cadastrarConta)
 	r.GET("banco/conta/:numero", consultarConta)
