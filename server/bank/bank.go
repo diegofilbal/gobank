@@ -42,7 +42,7 @@ func (b *Banco) CriarConta(numero int, tipoConta string, saldoInicial float64) e
 		return errors.New("Número de conta inválido")
 	}
 
-	conta := b.BuscaConta(numero))
+	conta := b.BuscaConta(numero)
 	if conta != nil {
 		return errors.New("Conta já existe")
 	}
