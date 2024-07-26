@@ -1,6 +1,7 @@
 package bank
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -63,9 +64,18 @@ func TestCadastrarConta(t *testing.T) {
 
 func TestConsultarConta(t *testing.T) {
 	b := Banco{}
-	b.CriarConta(1, CONTA_NORMAL, 100.0)
-	b.CriarConta(2, CONTA_BONUS, 50.0)
-	b.CriarConta(3, CONTA_POUPANCA, 200.0)
+	err := b.CriarConta(1, CONTA_NORMAL, 100.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err = b.CriarConta(2, CONTA_BONUS, 50.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err = b.CriarConta(3, CONTA_POUPANCA, 200.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
 
 	tests := []struct {
 		numero   int
@@ -118,8 +128,14 @@ func TestConsultarConta(t *testing.T) {
 
 func TestRealizarCredito(t *testing.T) {
 	b := Banco{}
-	b.CriarConta(1, CONTA_NORMAL, 100.0)
-	b.CriarConta(2, CONTA_BONUS, 0.0)
+	err := b.CriarConta(1, CONTA_NORMAL, 100.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err = b.CriarConta(2, CONTA_BONUS, 0.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
 
 	tests := []struct {
 		numero   int
@@ -170,8 +186,14 @@ func TestRealizarCredito(t *testing.T) {
 
 func TestRealizarDebito(t *testing.T) {
 	b := Banco{}
-	b.CriarConta(1, CONTA_NORMAL, 100.0)
-	b.CriarConta(2, CONTA_BONUS, 50.0)
+	err := b.CriarConta(1, CONTA_NORMAL, 100.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err = b.CriarConta(2, CONTA_BONUS, 50.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
 
 	tests := []struct {
 		numero   int
@@ -222,8 +244,14 @@ func TestRealizarDebito(t *testing.T) {
 
 func TestRealizarTransferencia(t *testing.T) {
 	b := Banco{}
-	b.CriarConta(1, CONTA_NORMAL, 100.0)
-	b.CriarConta(2, CONTA_BONUS, 0.0)
+	err := b.CriarConta(1, CONTA_NORMAL, 100.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err = b.CriarConta(2, CONTA_BONUS, 0.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
 
 	tests := []struct {
 		numeroOrigem    int
@@ -295,10 +323,22 @@ func TestRealizarTransferencia(t *testing.T) {
 
 func TestRenderJuros(t *testing.T) {
 	b := Banco{}
-	b.CriarConta(1, CONTA_POUPANCA, 0.0)
-	b.RealizarCredito(1, 1000.0)
-	b.CriarConta(2, CONTA_POUPANCA, 2000.0)
-	b.RealizarCredito(2, 2000.0)
+	err := b.CriarConta(1, CONTA_POUPANCA, 0.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err = b.RealizarCredito(1, 1000.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err = b.CriarConta(2, CONTA_POUPANCA, 2000.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err = b.RealizarCredito(2, 2000.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
 
 	tests := []struct {
 		taxa      float64
