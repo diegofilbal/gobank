@@ -22,3 +22,13 @@ func ValorValido(valor float64) bool {
 	match, _ := regexp.MatchString("^[0-9]+(\\.[0-9]+)?$", fmt.Sprint(valor))
 	return match
 }
+
+func LimiteSaldoNegativo(valor float64, saldo float64) bool {
+	limite := saldo - valor
+
+	if limite < -1000 {
+		return true
+	} else {
+		return false
+	}
+}

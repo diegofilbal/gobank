@@ -113,6 +113,12 @@ func (b *Banco) RealizarDebito(numero int, valor float64) error {
 	if !saldoSuficiente(*conta, valor) {
 		return errors.New("Saldo insuficiente")
 	}
+	if conta.Tipo == CONTA_BONUS || conta.Tipo == CONTA_NORMAL {
+		if utils.LimiteSaldoNegativo(valor, conta.Saldo) {
+			fmt.Println("Valor de limite negativo atingido para o tipo de conta origem!")
+			return nil
+		}
+	}
 
 	conta.Saldo -= valor
 	return nil
