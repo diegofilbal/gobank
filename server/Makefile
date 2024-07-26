@@ -7,6 +7,9 @@ default: run
 run:
 	@cd api && go run main.go
 
+dependency:
+	@go mod tidy
+
 build:
 	@go build -o $(APP_NAME) api/main.go
 
