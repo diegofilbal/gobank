@@ -2,7 +2,7 @@ name: Main CI
 
 on:
   pull_request_target:
-    types: 
+    types: https://github.com/Ze-Victor/gobank/edit/develop/.github/workflows/main.yml#
       - closed
     branches: 
       - main
@@ -51,7 +51,7 @@ jobs:
           name: latest.zip
           path: ./server/gobank.zip
 
-      - name: build the docker image
+      - name: Build the docker image
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -67,4 +67,4 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push $DOCKER_USERNAME/gobank:v1.0.0
+          docker push repoze/gobank:v1.0.0
