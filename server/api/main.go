@@ -67,7 +67,10 @@ func cadastrarConta(ctx *gin.Context) {
 		return
 	}
 
-	banco.CriarConta(req.Numero, req.Tipo, req.Saldo)
+	err := banco.CriarConta(req.Numero, req.Tipo, req.Saldo)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Erro ao criar conta"})
+	}
 	ctx.JSON(http.StatusOK, gin.H{"message": "Conta criada com sucesso"})
 }
 

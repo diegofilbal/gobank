@@ -63,9 +63,18 @@ func TestCadastrarConta(t *testing.T) {
 
 func TestConsultarConta(t *testing.T) {
 	b := Banco{}
-	b.CriarConta(1, CONTA_NORMAL, 100.0)
-	b.CriarConta(2, CONTA_BONUS, 50.0)
-	b.CriarConta(3, CONTA_POUPANCA, 200.0)
+	err := b.CriarConta(1, CONTA_NORMAL, 100.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err := b.CriarConta(2, CONTA_BONUS, 50.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err := b.CriarConta(3, CONTA_POUPANCA, 200.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
 
 	tests := []struct {
 		numero   int
@@ -295,10 +304,22 @@ func TestRealizarTransferencia(t *testing.T) {
 
 func TestRenderJuros(t *testing.T) {
 	b := Banco{}
-	b.CriarConta(1, CONTA_POUPANCA, 0.0)
-	b.RealizarCredito(1, 1000.0)
-	b.CriarConta(2, CONTA_POUPANCA, 2000.0)
-	b.RealizarCredito(2, 2000.0)
+	err: := b.CriarConta(1, CONTA_POUPANCA, 0.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err := b.RealizarCredito(1, 1000.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err := b.CriarConta(2, CONTA_POUPANCA, 2000.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err := b.RealizarCredito(2, 2000.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
 
 	tests := []struct {
 		taxa      float64
