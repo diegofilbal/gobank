@@ -7,7 +7,7 @@ default: run
 run:
 	@cd api && go run main.go
 
-dependency:
+dependencies:
 	@go mod tidy
 
 build:
