@@ -56,7 +56,7 @@ jobs:
         with:
           context: .
           file: ./server/Dockerfile
-          push: true
+          push: false
           tags: ${{ secrets.DOCKER_USERNAME }}/gobank:v1.0.0
 
       - name: Log in to Docker Hub
