@@ -1,0 +1,46 @@
+name: Release CI
+
+on:
+  push:
+    tags:
+      - 'rc-*'
+
+jobs:
+
+  release-pipeline:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.1'
+
+      - name: Resolve dependencies
+        run: make dependencies
+        working-directory: ./server
+
+      - name: Build
+        run: make build
+        working-directory: ./server
+
+      - name: Quality
+        run: make lint
+        working-directory: ./server
+
+      - name: Test
+        run: make test
+        working-directory: ./server
+
+      - name: Package
+        run: make package
+        working-directory: ./server
+
+      - name: Upload release assets
+        uses: actions/upload-artifact@v3
+        with:
+          name: $(echo $GITHUB_REF | awk -F'/' '{print $3}').zip
+          path: ./server/$(APP_NAME).zip
