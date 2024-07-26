@@ -1,18 +1,15 @@
 FROM golang:1.21.1
 
+# Instala o tree
 RUN apt-get update && apt-get install -y tree
 
 WORKDIR /server
 
-COPY . ./server
-
-RUN ls -la 
-
-RUN ls -la /server
+COPY . .
 
 RUN tree
 
-RUN go mod tidy ./server
+RUN go mod tidy
 
 RUN go build -o main ./api/main.go
 
