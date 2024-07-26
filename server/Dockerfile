@@ -4,8 +4,6 @@ ADD . /server
 
 WORKDIR /server
 
-RUN go mod tidy
-
 RUN go build -o main ./api/main.go
 
 EXPOSE 8080
