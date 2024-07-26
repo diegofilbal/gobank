@@ -91,7 +91,7 @@ func (b *Banco) RealizarCredito(numero int, valor float64) error {
 		return errors.New("Valor inválido")
 	}
 
-	conta.Saldo = conta.Saldo
+	conta.Saldo += valor
 	if conta.Tipo == CONTA_BONUS {
 		conta.Pontuacao += int(valor / 100)
 	}
