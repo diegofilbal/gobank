@@ -63,11 +63,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.NEW_TAG }}.zip
-          path: ./server/gobank-dev.zip
+          path: ./server/gobank.zip
 
       - name: Build Docker image
         run: |
-          docker build -t $DOCKER_USERNAME/gobank-dev:${{ env.NEW_TAG }} .
+          docker build -t $DOCKER_USERNAME/gobank:${{ env.NEW_TAG }} .
         working-directory: ./server
 
       - name: Log in to Docker Hub
@@ -78,4 +78,4 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push $DOCKER_USERNAME/gobank-dev:${{ env.NEW_TAG }}
+          docker push $DOCKER_USERNAME/gobank:${{ env.NEW_TAG }}
