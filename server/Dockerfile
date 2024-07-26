@@ -2,7 +2,7 @@ FROM golang:1.21.1
 
 WORKDIR /server
 
-COPY ./server
+COPY . ./server
 
 RUN ls -la 
 
