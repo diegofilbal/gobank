@@ -128,8 +128,14 @@ func TestConsultarConta(t *testing.T) {
 
 func TestRealizarCredito(t *testing.T) {
 	b := Banco{}
-	b.CriarConta(1, CONTA_NORMAL, 100.0)
-	b.CriarConta(2, CONTA_BONUS, 0.0)
+	err := b.CriarConta(1, CONTA_NORMAL, 100.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err = b.CriarConta(2, CONTA_BONUS, 0.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
 
 	tests := []struct {
 		numero   int
@@ -180,8 +186,14 @@ func TestRealizarCredito(t *testing.T) {
 
 func TestRealizarDebito(t *testing.T) {
 	b := Banco{}
-	b.CriarConta(1, CONTA_NORMAL, 100.0)
-	b.CriarConta(2, CONTA_BONUS, 50.0)
+	err := b.CriarConta(1, CONTA_NORMAL, 100.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err = b.CriarConta(2, CONTA_BONUS, 50.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
 
 	tests := []struct {
 		numero   int
@@ -232,8 +244,14 @@ func TestRealizarDebito(t *testing.T) {
 
 func TestRealizarTransferencia(t *testing.T) {
 	b := Banco{}
-	b.CriarConta(1, CONTA_NORMAL, 100.0)
-	b.CriarConta(2, CONTA_BONUS, 0.0)
+	err := b.CriarConta(1, CONTA_NORMAL, 100.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
+	err = b.CriarConta(2, CONTA_BONUS, 0.0)
+	if err != nil {
+		fmt.Println("Erro: ", err)
+	}
 
 	tests := []struct {
 		numeroOrigem    int
