@@ -19,5 +19,8 @@ test:
 lint:
 	@golangci-lint run
 
+package:
+	@zip -r $(APP_NAME).zip api bank go.mod go.sum utils.go
+
 clean:
 	@rm -f $(APP_NAME)
