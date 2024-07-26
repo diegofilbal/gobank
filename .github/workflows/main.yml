@@ -45,35 +45,15 @@ jobs:
         run: make package
         working-directory: ./server
 
-      - name: Find latest rc tag
-        id: find_tag
-        run: |
-          LATEST_RC_TAG=$(git tag -l 'rc-*' | sort -V | tail -n 1)
-          echo "LATEST_RC_TAG=${LATEST_RC_TAG}" >> $GITHUB_ENV
-
-      - name: Create new rel tag
-        run: |
-          if [ -n "${LATEST_RC_TAG}" ]; then
-            BASE_TAG="${LATEST_RC_TAG#rc-}"
-            NEW_TAG="rel-${BASE_TAG}"
-            git tag $NEW_TAG
-            git push origin $NEW_TAG
-          else
-            echo "No rc tag found, skipping tag creation."
-            exit 1
-          fi
-        env:
-          LATEST_RC_TAG: ${{ env.LATEST_RC_TAG }}
-
       - name: Upload release assets
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.NEW_TAG }}.zip
-          path: ./server/gobank-dev.zip
+          name: latest.zip
+          path: ./server/gobank.zip
 
       - name: Build Docker image
         run: |
-          docker build -t $DOCKER_USERNAME/gobank-dev:${{ env.NEW_TAG }} .
+          docker build -t $DOCKER_USERNAME/gobank:latest .
         working-directory: ./server
 
       - name: Log in to Docker Hub
@@ -84,4 +64,4 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push $DOCKER_USERNAME/gobank-dev:${{ env.NEW_TAG }}
+          docker push $DOCKER_USERNAME/gobank:latest
