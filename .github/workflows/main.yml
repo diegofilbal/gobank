@@ -2,7 +2,7 @@ name: Main CI
 
 on:
   pull_request_target:
-    types: https://github.com/Ze-Victor/gobank/edit/develop/.github/workflows/main.yml#
+    types:
       - closed
     branches: 
       - main
