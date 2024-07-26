@@ -17,7 +17,7 @@ test:
 	@cd bank && go test -v
 
 lint:
-	@golangci-lint run
+	@@golangci-lint run
 
 package:
 	@zip -r $(APP_NAME).zip api bank go.mod go.sum utils.go
