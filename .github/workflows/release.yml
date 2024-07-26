@@ -29,6 +29,7 @@ jobs:
 
       - name: Quality
         run: make lint
+        working-directory: ./server
 
       - name: Test
         run: make test
