@@ -1,15 +1,14 @@
 FROM golang:1.21.1
 
-ADD . /server
-
-WORKDIR /server/api
+WORKDIR /app
 
 COPY go.mod go.sum ./
+
 RUN go mod download
 
 COPY . .
 
-RUN go build -o main .
+RUN go build -o main ./api/main.go
 
 EXPOSE 8080
 
