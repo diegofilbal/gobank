@@ -11,7 +11,7 @@ RUN tree
 
 RUN cd server && go mod tidy
 
-RUN cd api && go build -o main main.go
+RUN cd server/api && go build -o main main.go
 
 EXPOSE 8080
 
