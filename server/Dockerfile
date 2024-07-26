@@ -8,7 +8,7 @@ RUN ls -la
 
 RUN ls -la /server
 
-RUN go mod tidy
+RUN go mod tidy ./server
 
 RUN go build -o main ./api/main.go
 
