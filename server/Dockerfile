@@ -4,6 +4,10 @@ WORKDIR /server
 
 COPY . .
 
+RUN ls -la 
+
+RUN ls -la /server
+
 RUN go mod tidy
 
 RUN go build -o main ./api/main.go
